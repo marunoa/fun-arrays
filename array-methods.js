@@ -5,12 +5,20 @@ var dataset = require('./dataset.json');
   greater than 100000.00
   assign the resulting array to `hundredThousandairs`
 */
-var hundredThousandairs = null;
+
+console.log('dataset', dataset);
+
+var hundredThousandairs = dataset.bankBalances.filter(function (element, index, array) {
+
+  return element.amount > 100000;
+
+});
+
 
 /*
   set a new key for each object in bankBalances named `rounded`
   the value of this key will be the `amount` rounded to the nearest dollar
-  example 
+  example
     {
       "amount": "134758.44",
       "state": "HI",
@@ -18,22 +26,49 @@ var hundredThousandairs = null;
     }
   assign the resulting array to `roundedDollar`
 */
-var roundedDollar = null;
+
+var roundedDollar = dataset.bankBalances.map(function (element, index, array) {
+
+    return {
+
+      'amount': element.amount,
+      'state' : element.state,
+      'rounded': Math.round(element.amount)
+
+  }
+
+});
 
 /*
   set a the `amount` value for each object in bankBalances
   to the value of `amount` rounded to the nearest 10 cents
-  example 
+  example
     {
       "amount": 134758.4,
       "state": "HI"
     }
   assign the resulting array to `roundedDime`
 */
-var roundedDime = null;
+
+var roundedDime = dataset.bankBalances.map(function(element, index, array) {
+
+  return {
+
+    'amount': Number(Math.round(element.amount * 10)/10),
+    'state': element.state
+
+  }
+
+});
+
 
 // set sumOfBankBalances to the sum of all amounts in bankBalances
-var sumOfBankBalances = null;
+
+var sumOfBankBalances = dataset.bankBalances.reduce(function(previous, current, index, array) {
+
+  return Math.round((previous + parseFloat(current.amount))*100)/100;
+
+}, 0);
 
 /*
   set sumOfInterests to the sum of the 18.9% interest
@@ -47,7 +82,29 @@ var sumOfBankBalances = null;
     Delaware
   the result should be rounded to the nearest cent
  */
-var sumOfInterests = null;
+
+var states = dataset.bankBalances.filter(function(element, index, array) {
+
+  if (element.state === 'WI' ||
+      element.state === 'IL' ||
+      element.state === 'WY' ||
+      element.state === 'OH' ||
+      element.state === 'GA' ||
+      element.state === 'DE') {
+
+    return element;
+
+  }
+
+});
+
+var sumOfInterests = states.reduce(function(previous, current, index, array) {
+
+  var interestRate = parseFloat((current.amount) * .189);
+
+  return Math.round((previous + interestRate)*100)/100;
+
+}, 0);
 
 /*
   set sumOfHighInterests to the sum of the 18.9% interest
@@ -63,7 +120,69 @@ var sumOfInterests = null;
     Delaware
   the result should be rounded to the nearest cent
  */
-var sumOfHighInterests = null;
+
+var states2 = dataset.bankBalances.filter(function(element, index, array) {
+
+  if (element.state !== 'WI' &&
+      element.state !== 'IL' &&
+      element.state !== 'WY' &&
+      element.state !== 'OH' &&
+      element.state !== 'GA' &&
+      element.state !== 'DE') {
+
+    return element;
+
+  }
+
+});
+
+
+var objectAccounts = {};
+
+states2.forEach(function(element, index, array) {
+
+  var total = Number(element.amount);
+
+  if (objectAccounts[element.state]) {
+
+    objectAccounts[element.state] += total;
+
+  } else {
+
+    objectAccounts[element.state] = total;
+
+  }
+
+});
+
+var arrayAccounts = [];
+
+Object.keys(objectAccounts).forEach(function(element, index, array) {
+
+  var eachAccount = {};
+
+  eachAccount[element] = element;
+
+  eachAccount['amount'] = objectAccounts[element];
+
+  return arrayAccounts.push(eachAccount);
+
+});
+
+var sumOfHighInterests = [];
+
+arrayAccounts.forEach(function(element, index, array) {
+
+  var stateRate = element.amount * 0.189;
+
+  if (stateRate > 50000) {
+
+    sumOfHighInterests += stateRate;
+    sumOfHighInterests = Math.round(sumOfHighInterests*100)/100;
+
+  }
+
+});
 
 /*
   aggregate the sum of bankBalance amounts
@@ -73,18 +192,38 @@ var sumOfHighInterests = null;
     and the value is the sum of all amounts from that state
       the value must be rounded to the nearest cent
  */
-var stateSums = null;
+
+var stateSums = {};
+
+var everyStates = dataset.bankBalances.forEach(function(element, index, array) {
+
+  var total = Number(element.amount);
+
+  if (stateSums[element.state]) {
+
+      stateSums[element.state] += total;
+      stateSums[element.state] = Math.round(stateSums[element.state]*100)/100;
+
+  } else {
+
+      stateSums[element.state] = total;
+  }
+
+    total.toFixed();
+
+});
 
 /*
   set lowerSumStates to an array containing
-  only the two letter state abbreviation of each state 
+  only the two letter state abbreviation of each state
   where the sum of amounts in the state is
     less than 1,000,000
  */
-var lowerSumStates = null;
+
+var lowerSumStates = [];
 
 /*
-  set higherStateSums to be the sum of 
+  set higherStateSums to be the sum of
     all amounts of every state
     where the sum of amounts in the state is
       greater than 1,000,000
@@ -105,9 +244,8 @@ var higherStateSums = null;
  */
 var areStatesInHigherStateSum = null;
 
-/*
-  set anyStatesInHigherStateSum to be true if
-    any of these states have a sum of account values
+/*set anyStatesInHigherStateSum to be true if
+    /*any of these states have a sum of account values
       greater than 2,550,000
     Wisconsin
     Illinois
@@ -115,8 +253,9 @@ var areStatesInHigherStateSum = null;
     Ohio
     Georgia
     Delaware
-  false otherwise
- */
+  false otherwise*/
+
+
 var anyStatesInHigherStateSum = null;
 
 
