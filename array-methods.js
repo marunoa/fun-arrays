@@ -228,6 +228,7 @@ var lowerSumStates = [];
     where the sum of amounts in the state is
       greater than 1,000,000
  */
+
 var higherStateSums = null;
 
 /*
@@ -242,6 +243,7 @@ var higherStateSums = null;
     Delaware
   false otherwise
  */
+
 var areStatesInHigherStateSum = null;
 
 /*set anyStatesInHigherStateSum to be true if
