@@ -35,7 +35,7 @@ var roundedDollar = dataset.bankBalances.map(function (element, index, array) {
       'state' : element.state,
       'rounded': Math.round(element.amount)
 
-  }
+  };
 
 });
 
